@@ -135,6 +135,14 @@ export default class NpmRegistry extends Registry {
   }
 
   getScope(packageName: string): string {
+    try {
+      const packageUrl = url.parse(packageName);
+      if (packageUrl.protocol && packageUrl.pathname) {
+        packageName = packageUrl.pathname.split(/\//)[1];
+      }
+    } catch(e) {
+      //Malformed URL, nothing to do
+    }
     return !packageName || packageName[0] !== '@' ? '' : packageName.split(/\/|%2f/)[0];
   }
 
